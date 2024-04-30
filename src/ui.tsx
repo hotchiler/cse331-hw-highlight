@@ -1,9 +1,8 @@
 import React from 'react';
 import { List, cons, nil, compact_list } from './list';
-import { findNameSet, getColorCss } from './color_list';
+import { ColorList, getColorCss } from './color_list';
 import { Highlight } from './parser';
 import './ui.css'
-
 
 /**
  * Returns HTML that displays a form asking the user for inputs to a color
@@ -47,13 +46,13 @@ export const ShowForm = (_: {}): JSX.Element => {
  *     includes the text, where each card says the color name and has its
  *     background color set to the actual color
  */
-export const ShowColorSet = (props: {text: string}): JSX.Element => {
-  const names = findNameSet(props.text.toLowerCase());
-  return <div>{compact_list(getColorCards(names))}</div>
+export const ShowColorSet = (props: {text: string; colors: ColorList}): JSX.Element => {
+  const names = props.colors.findNameSet(props.text.toLowerCase());
+  return <div>{compact_list(getColorCards(names, props.colors))}</div>
 };
 
 // Map a list of names into a list of HTML elements that display each color.
-const getColorCards = (names: List<string>): List<JSX.Element> => {
+const getColorCards = (names: List<string>, colors: ColorList): List<JSX.Element> => {
   if (names.kind === "nil") {
     return nil;
   } else {
@@ -63,7 +62,7 @@ const getColorCards = (names: List<string>): List<JSX.Element> => {
           <span className="color-card"
                 style={{backgroundColor: bg, color: fg}}>{names.hd}</span>
         </span>,
-        getColorCards(names.tl));
+        getColorCards(names.tl, colors));
   }
 };
 
@@ -77,13 +76,13 @@ const getColorCards = (names: List<string>): List<JSX.Element> => {
  *     span is the highlight color
  */
 export const ShowHighlights =
-    (props: {highlights: List<Highlight>}): JSX.Element => {
-  return <div>{compact_list(getHighlights(props.highlights, 0))}</div>;
+    (props: {highlights: List<Highlight>; colors: ColorList}): JSX.Element => {
+  return <div>{compact_list(getHighlights(props.highlights, 0, props.colors))}</div>;
 };
 
 // Maps the list of highlights into a list of spans showing them.
 const getHighlights = 
-    (highlights: List<Highlight>, key: number): List<JSX.Element> => {
+    (highlights: List<Highlight>, key: number, colors: ColorList): List<JSX.Element> => {
   if (highlights.kind === "nil") {
     return nil;
   } else {
@@ -92,6 +91,6 @@ const getHighlights =
     return cons(
         <span className="highlight" key={key}
               style={{backgroundColor: bg, color: fg}}>{h.text}</span>,
-        getHighlights(highlights.tl, key+1));
+        getHighlights(highlights.tl, key+1, colors));
   }
 };

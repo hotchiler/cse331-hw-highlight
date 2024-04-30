@@ -3,12 +3,16 @@ import { createRoot, Root } from 'react-dom/client';
 import { List } from './list';
 import { Highlight, parseLines } from './parser';
 import { ShowForm, ShowColorSet, ShowHighlights } from './ui';
-
+import { ColorList } from './color_list';
+import { makeSimpleColorList } from './color_list';
 
 // TODO: For 1f, create an instance of ColorList with makeSimpleColorList 
 //               to pass into the ui.tsx function calls below
 //       For 3g, replace makeSimpleColorList with makeColorTree
 //       For 5f, replace parseLines with parseText
+
+
+const colors: ColorList = makeSimpleColorList();
 
 
 // Parse the query parameters in the URL.
@@ -27,14 +31,14 @@ const root: Root = createRoot(main);
 try {
   // If the query included a word to search for, show the colors containing that
   if (word !== null) {
-    root.render(<React.StrictMode><ShowColorSet text={word}/></React.StrictMode>);
+    root.render(<React.StrictMode><ShowColorSet text={word} colors={colors}/></React.StrictMode>);
 
   // If the query included a list of lines, then show them highlighted.
   } else if (lines) {
     const highlights: List<Highlight> = parseLines(lines);
     root.render(
         <React.StrictMode>
-          <ShowHighlights highlights={highlights}/>
+          <ShowHighlights highlights={highlights} colors={colors}/>
         </React.StrictMode>);
 
   // Otherwise, show the form asking them for input.
