@@ -21,8 +21,31 @@ export const buildBst = (L: List<ColorDetails>): ColorNode => {
     }
     return buildBst(P);
 }
-// export const search = (y: string, root: ColorNode): ColorDetails | undefined => {
-//     
-// };
+
+/**
+ * Searches for a color in a color tree.
+ * 
+ * @param {string} y - The color to search for.
+ * @param {ColorNode} root - The root node of the color tree.
+ * @returns {ColorDetails | undefined} - The color details if found, otherwise undefined.
+ */
+export const search = (y: string, root: ColorNode): ColorDetails | undefined => {
+    if (root === empty) {
+        return undefined;
+    }
+
+    if (root.kind === "node") {
+        const [color] = root.details;
+        if (y === color) {
+            return root.details;
+        } else if (y < color) {
+            return search(y, root.before);
+        } else {
+            return search(y, root.after);
+        }
+    }
+
+    return undefined;
+};
 
 // TODO: add other classes or functions here as needed

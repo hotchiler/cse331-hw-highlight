@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import { explode_array, nil} from "./list";
-import {buildBst} from "./color_tree";
+import {buildBst, search} from "./color_tree";
 import { node, empty } from "./color_node";
 
 describe('color_tree', function() {
@@ -35,9 +35,9 @@ describe('color_tree', function() {
         });
 
     it('search', function() {
-        // assert.deepEqual(search('Yellow', 
-        //     node(['Yellow', '#FFFF00', false], empty, empty)), 
-        //     ['Yellow', '#FFFF00', false]);
+        assert.deepEqual(search('Yellow', 
+             node(['Yellow', '#FFFF00', false], empty, empty)), 
+             ['Yellow', '#FFFF00', false]);
     });
 
     // TODO: copy some tests over here in 3g
