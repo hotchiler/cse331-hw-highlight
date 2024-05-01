@@ -1,6 +1,7 @@
 import { List, len, split, nil } from './list';
 import { ColorDetails, COLORS } from './colors';
-import { ColorNode, empty, node } from './color_node';
+import { ColorNode, empty, node} from './color_node';
+import { findNameSetIn, getColorCssIn, ColorList} from './color_list';
 
 
 /**
@@ -49,3 +50,55 @@ export const search = (y: string, root: ColorNode): ColorDetails | undefined => 
 };
 
 // TODO: add other classes or functions here as needed
+/**
+ * ColorTree storing color information in a binary search tree (BST).
+ * Implements the ColorList interface.
+ */
+class ColorTree implements ColorList {
+    /**
+     * Representation Invariant: this.colorTree = makeBST(ColorDetailsList).
+     * Abstraction Function: obj = this.ColorDetailsList.
+     */
+      readonly ColorDetailsList: List<ColorDetails>;
+      readonly colorTree: ColorNode;
+  
+      /**
+       * Creates an instance of a ColorTree.
+       * @param ColorDetailsList A list of ColorDetails.
+       */
+       constructor(ColorDetailsList: List<ColorDetails>) {
+          this.ColorDetailsList = ColorDetailsList;
+          this.colorTree = buildBst(ColorDetailsList);
+        }
+  
+      /**
+       * Returns a list of all color names that have the given text.
+       * @param text Searches for the names of the colors (case insensitive).
+       * @returns List of all color names that have the given text.
+       */
+      findNameSet = (text: string): List<string> => {
+        return findNameSetIn(text, this.ColorDetailsList);
+      }
+  
+      /**
+       * Returns the background and foreground to highlight with CSS colors.
+       * @param name Name of the color.
+       * @throws Error if color not found. 
+       * @returns Tuple storing background (CSS color) and foreground (foreground).
+       */
+      getColorCss = (name: string): readonly [string, string] => {
+        const ColorDetails = search(name, this.colorTree);
+        if (ColorDetails) {
+          return getColorCssIn(name, this.ColorDetailsList);
+        } else {
+          throw new Error(`Color not found: "${name}"`);
+        }
+      }
+  }
+  
+  /**
+   * Constructs a new ColorTree by taking in COLORS.
+   */
+  export const makeColorTree = (): ColorTree => {
+      return new ColorTree(COLORS);
+  };

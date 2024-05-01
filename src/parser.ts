@@ -1,5 +1,5 @@
 import { List, nil, cons, explode_array, split_at } from './list';
-import { compact } from './char_list';
+import { compact, explode } from './char_list';
 
 
 /** Text and the name of the highlight (background) color to show it in. */
@@ -82,20 +82,50 @@ export const parseNextHighlight = (chars: List<number>): NextHighlight|undefined
 
 // TODO: Uncomment and complete:
 
-// /** Returns the highlights in the text as described in parseText. */
-// export const parseHighlights = (chars: List<number>): List<Highlight> => {
-//   // TODO: implement this
-// };
+/**
+ * Parses a list of characters and returns a list of highlights.
+ *
+ * @param chars - The list of characters to parse.
+ * @returns A list of highlights.
+ */
+/**
+ * Parses a list of characters and returns a list of highlights.
+ *
+ * @param chars - The list of characters to parse.
+ * @returns A list of highlights.
+ */
+export const parseHighlights = (chars: List<number>): List<Highlight> => {
+  if (chars === nil) {
+    return nil;
+  } else {
+    // Try to parse the next highlight
+    const next = parseNextHighlight(chars);
+    if (next !== undefined) {
+      const [before, highlight, after] = next;
 
-// /**
-//  * Parses text containing highlights of the form [color|text] into a list of
-//  * highlights, where all unhighlighted parts are white.
-//  * @param text Text to parse into highlights
-//  * @returns List of highlights described by the text, where all letters are
-//  *     contained in a single back highlight until a part of the form [c|t],
-//  *     which becomes the highlight with color c and text t, followed by the
-//  *     result of parsing the rest after that.
-//  */
-// export const parseText = (text: string): List<Highlight> => {
-//   return parseHighlights(explode(text));
-// };
+      if (before) {
+        // If there is text before the highlight, create a white highlight for it
+        return cons({ color: 'white', text: before }, cons(highlight, parseHighlights(after)));
+      } else {
+        // If there is no text before the highlight, simply add the highlight to the list
+        return cons(highlight, parseHighlights(after));
+      }
+    } else {
+      // If no highlight was found, create a white highlight for the remaining characters
+      return cons({ color: 'white', text: compact(chars) }, nil);
+    }
+  }
+};
+
+/**
+* Parses text containing highlights of the form [color|text] into a list of
+* highlights, where all unhighlighted parts are white.
+* @param text Text to parse into highlights
+* @returns List of highlights described by the text, where all letters are
+*     contained in a single back highlight until a part of the form [c|t],
+*     which becomes the highlight with color c and text t, followed by the
+*     result of parsing the rest after that.
+*/
+export const parseText = (text: string): List<Highlight> => {
+  return parseHighlights(explode(text));
+};

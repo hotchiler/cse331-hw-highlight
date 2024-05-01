@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import { explode } from './char_list';
-import { explode_array } from './list';
-import { parseNextHighlight, parseLines } from './parser';
+import { explode_array, cons, nil } from './list';
+import { parseNextHighlight, parseLines, parseHighlights, parseText } from './parser';
 
 
 describe('parser', function() {
@@ -52,19 +52,32 @@ describe('parser', function() {
   });
 
   it('parseHighlights', function() {
-    // TODO: Add tests here
+  // base case
+  assert.deepStrictEqual(parseHighlights(explode("")), nil);
+  // second branch
+  assert.deepStrictEqual(parseHighlights(explode("mn")), cons({ color: "white", text: "mn" }, nil));
+  // third branch
+  assert.deepStrictEqual(parseHighlights(explode("[orange|fruit]")), cons({color: "orange", text: "fruit"}, nil));
+  assert.deepStrictEqual(parseHighlights(explode("[cyan|cool] water")), cons({color: "cyan", text: "cool"},
+  cons({color: "white", text: " water"}, nil)));
+  // fourth branch
+  assert.deepStrictEqual(parseHighlights(explode("[violet|flower][yellow|sunshine]")), cons({color: "violet", text: "flower"},
+  cons({color: "yellow", text: "sunshine"}, nil)));
+  assert.deepStrictEqual(parseHighlights(explode("[silver|coin][gold|ring] shine")), cons({color: "silver", text: "coin"},
+  cons({color: "gold", text: "ring"}, cons({color: "white", text: " shine"}, nil))));
+
   });
 
   // TODO: Uncomment to test
-//  it('parseText', function() {
-//    assert.deepEqual(parseText(""), explode_array([]));
-//    assert.deepEqual(
-//      parseText("my [red|favorite] book"),
-//      explode_array([
-//        {color: 'white', text: 'my '},
-//        {color: 'red', text: 'favorite'},
-//        {color: 'white', text: ' book'},
-//      ]));
-//  });
+  it('parseText', function() {
+    assert.deepEqual(parseText(""), explode_array([]));
+    assert.deepEqual(
+      parseText("my [red|favorite] book"),
+      explode_array([
+        {color: 'white', text: 'my '},
+        {color: 'red', text: 'favorite'},
+        {color: 'white', text: ' book'},
+      ]));
+  });
 
 });

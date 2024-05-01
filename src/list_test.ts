@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 import { nil, cons, len, split, compact_list, explode_array } from './list';
 import { explode } from './char_list';
+import { split_at } from './list';
 
 
 describe('list', function() {
@@ -25,19 +26,37 @@ describe('list', function() {
 
     // 0-1-many: 1 recursive call
     assert.deepEqual(split(1n, explode("a")), [explode("a"), nil]);
-    assert.deepEqual(split(1n, explode("as")), [explode("a"), explode("s")]);
-    assert.deepEqual(split(1n, explode("stray")), [explode("s"), explode("tray")]);
+    assert.deepEqual(split(1n, explode("ab")), [explode("a"), explode("b")]);
+    assert.deepEqual(split(1n, explode("destiny")), [explode("d"), explode("estiny")]);
 
     // 0-1-many: 2+ recursive calls
-    assert.deepEqual(split(2n, explode("as")), [explode("as"), nil]);
-    assert.deepEqual(split(2n, explode("stray")), [explode("st"), explode("ray")]);
-    assert.deepEqual(split(3n, explode("stray")), [explode("str"), explode("ay")]);
-    assert.deepEqual(split(4n, explode("stray")), [explode("stra"), explode("y")]);
-    assert.deepEqual(split(5n, explode("stray")), [explode("stray"), explode("")]);
+    assert.deepEqual(split(2n, explode("ab")), [explode("ab"), nil]);
+    assert.deepEqual(split(2n, explode("golgoroth")), [explode("go"), explode("lgoroth")]);
+    assert.deepEqual(split(3n, explode("caretaker")), [explode("car"), explode("etaker")]);
+    assert.deepEqual(split(4n, explode("planets")), [explode("plan"), explode("ets")]);
+    assert.deepEqual(split(5n, explode("atraks")), [explode("atrak"), explode("s")]);
   });
   
   it('split_at', function() {
-    // TODO: add tests for problem 5a
+    //0-1-many: base case
+    assert.deepEqual(split_at(nil, "a"), [nil, nil]);
+    assert.deepEqual(split_at(nil, "b"), [nil, nil]);
+
+    //0-1-many: second base case
+    assert.deepEqual(split_at(explode("c"), "c".charCodeAt(0)), [nil, explode("c")]);
+    assert.deepEqual(split_at(explode("d"), "d".charCodeAt(0)), [nil, explode("d")]);
+
+    //0-1-many: 1 recursive call
+    assert.deepEqual(split_at(explode("ab"), "b".charCodeAt(0)), [explode("a"), explode("b")])
+    assert.deepEqual(split_at(explode("bc"), "c".charCodeAt(0)), [explode("b"), explode("c")])
+    assert.deepEqual(split_at(explode("x"), "y".charCodeAt(0)), [explode("x"), nil])
+    assert.deepEqual(split_at(explode("a"), "b".charCodeAt(0)), [explode("a"), nil])
+
+    //0-1-many: 2+ recursive calls
+    assert.deepEqual(split_at(explode("nut"), "t".charCodeAt(0)), [explode("nu"), explode("t")])
+    assert.deepEqual(split_at(explode("peanuts"), "n".charCodeAt(0)), [explode("pea"), explode("nuts")])
+    assert.deepEqual(split_at(explode("po"), "x".charCodeAt(0)), [explode("po"), nil])
+    assert.deepEqual(split_at(explode("peanuts"), "b".charCodeAt(0)), [explode("peanuts"), nil])
   });
 
   it('compact_list', function() {

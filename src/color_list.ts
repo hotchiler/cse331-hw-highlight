@@ -30,19 +30,20 @@ export const findNameSet = (text: string): List<string> => {
   return findNameSetIn(text, COLORS);
 };
 
-// Returns a new list containing just the names of those colors that include the
-// given text.
-// @param text The text in question
-// @param colors The full list of colors
-// @returns The sublist of colors containing those colors whose names contain
-//    the given text.
-const findNameSetIn =
+/**
+* Returns a new list containing just the names of those colors that include the
+*  given text.
+* @param text The text in question
+* @param colors The full list of colors
+* @returns The sublist of colors containing those colors whose names contain
+*  the given text.
+*/
+export const findNameSetIn =
     (text: string, colors: List<ColorDetails>): List<string> => {
   if (colors.kind === "nil") {
     return nil;
   } else {
-    // Note: the _ keeps the typechecker from complaining about our not using
-    // these variables (but we must define them to avoid tuple indexing)
+ // to avoid tuple indexing error
     const [color, _css, _foreground] = colors.hd;
     if (color.includes(text)) {
       return cons(color, findNameSetIn(text, colors.tl));
@@ -63,13 +64,15 @@ export const getColorCss = (name: string): readonly [string, string] => {
   return getColorCssIn(name, COLORS);
 };
 
-// Returns the colors from the (first) list entry with this color name. Throws
-// an Error none is found (i.e., we hit the end of the list).
-// @param name The name in question.
-// @param colors The full list of colors.
-// @throws Error if no item in colors has the given name.
-// @return The first item in colors whose name matches the given name.
-const getColorCssIn =
+
+/**
+ * Retrieves the CSS and foreground color for a given color name from a list of color details.
+ * @param name - The name of the color to retrieve.
+ * @param colors - The list of color details to search in.
+ * @returns An array containing the CSS color value and the foreground color value.
+ * @throws An error if no color with the given name is found.
+ */
+export const getColorCssIn =
     (name: string, colors: List<ColorDetails>): readonly [string, string] => {
   if (colors.kind === "nil") {
     throw new Error(`no color called "${name}"`);

@@ -22,4 +22,5 @@ describe('color_list', function() {
     assert.deepEqual(colorList.getColorCss("lavender"), ['#E6E6FA', '#101010']);
     assert.deepEqual(colorList.getColorCss("indigo"), ['#4B0082', '#F0F0F0']);
   });
+  
 });

@@ -4,7 +4,7 @@ import { List } from './list';
 import { Highlight, parseLines } from './parser';
 import { ShowForm, ShowColorSet, ShowHighlights } from './ui';
 import { ColorList } from './color_list';
-import { makeSimpleColorList } from './color_list';
+import { makeColorTree } from './color_tree';
 
 // TODO: For 1f, create an instance of ColorList with makeSimpleColorList 
 //               to pass into the ui.tsx function calls below
@@ -12,7 +12,7 @@ import { makeSimpleColorList } from './color_list';
 //       For 5f, replace parseLines with parseText
 
 
-const colors: ColorList = makeSimpleColorList();
+const colors: ColorList = makeColorTree();
 
 
 // Parse the query parameters in the URL.
